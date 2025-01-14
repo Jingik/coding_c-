@@ -1,31 +1,31 @@
 #include <iostream>
-#include <vector>
+#include <string>
+#include <algorithm>
+
 using namespace std;
 
-int N, M;           
-int path[10];       
+int N, M;
 
-void func(int depth) {
-    if (depth == M) { 
-        for (int i = 0; i < M; i++) {
-            cout << path[i] << " ";
-        }
-        cout << "\n";
+void dfs(int cnt, string num) {
+    if (cnt == M) {
+        cout << num << "\n";
         return;
     }
-
-    for (int i = 1; i <= N; i++) {
-        path[depth] = i; 
-        func(depth + 1); 
+    for (int i = 1; i < N; i++) {
+        dfs(cnt + 1, num + " " + to_string(i));
     }
 }
 
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(NULL);           
+    cin.tie(NULL);
 
     cin >> N >> M;
-    func(0);
+    N += 1;
 
+    for (int i = 1; i < N; i++) {
+        dfs(1, to_string(i));
+    }
+    
     return 0;
 }
