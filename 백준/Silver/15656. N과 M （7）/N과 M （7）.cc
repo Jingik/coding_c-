@@ -1,33 +1,26 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <string>
 
 using namespace std;
 
 int N, M;
 int arr[10];
-int path[10];
-bool visited[10];
+string result;
 
-void func(int depth) {
+void func(int depth, string current) {
     if (depth == M) {
-        for (int i = 0; i < M; i++) {
-            cout << path[i] << " ";
-        }
-        cout << "\n";
+        result += current + "\n"; 
         return;
     }
-    
 
     for (int i = 0; i < N; i++) {
-        path[depth] = arr[i];
-        func(depth + 1);
+        func(depth + 1, current + to_string(arr[i]) + " "); 
     }
 }
 
-
 int main() {
-
     ios::sync_with_stdio(false);
     cin.tie(NULL);
 
@@ -37,8 +30,9 @@ int main() {
         cin >> arr[i];
     }
 
-    sort(arr, arr+N);
-    func(0); 
+    sort(arr, arr + N); 
+    func(0, "");       
 
+    cout << result;    
     return 0;
 }
