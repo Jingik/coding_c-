@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include <unordered_map>
+#include <algorithm>
 
 using namespace std;
 
@@ -16,35 +16,29 @@ int main() {
         cin >> susi[i];
     }
 
-    unordered_map<int, int> sushi_count;
+    vector<int> sushi_count(d + 1, 0);
     int unique_count = 0;
 
     for (int i = 0; i < k; i++) {
-        if (sushi_count[susi[i]] == 0) {
-            unique_count++;
-        }
+        if (sushi_count[susi[i]] == 0) unique_count++;
         sushi_count[susi[i]]++;
     }
 
     int max_types = unique_count;
 
     for (int i = 0; i < n; i++) {
-        int remove_idx = i;
-        sushi_count[susi[remove_idx]]--;
-        if (sushi_count[susi[remove_idx]] == 0) {
-            unique_count--;
-        }
+        int remove_idx = i;  
+        int add_idx = (i + k) % n; 
 
-        int add_idx = (i + k) % n;
-        if (sushi_count[susi[add_idx]] == 0) {
-            unique_count++;
-        }
+        sushi_count[susi[remove_idx]]--;
+        if (sushi_count[susi[remove_idx]] == 0) unique_count--;
+
+        if (sushi_count[susi[add_idx]] == 0) unique_count++;
         sushi_count[susi[add_idx]]++;
 
         if (sushi_count[c] == 0) {
             max_types = max(max_types, unique_count + 1);
-        }
-        else {
+        } else {
             max_types = max(max_types, unique_count);
         }
     }
