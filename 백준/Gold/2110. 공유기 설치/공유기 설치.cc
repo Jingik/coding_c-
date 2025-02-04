@@ -18,6 +18,8 @@ bool canInstall(vector<int>& houses, int C, int distance) {
 }
 
 int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
     int N, C;
     cin >> N >> C;
 
