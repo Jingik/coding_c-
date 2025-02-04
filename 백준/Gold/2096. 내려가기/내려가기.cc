@@ -1,48 +1,46 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
-#include <climits>
 
 using namespace std;
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
     int N;
     cin >> N;
 
-    vector<int> prev_max(3, 0), curr_max(3, 0);
-    vector<int> prev_min(3, 0), curr_min(3, 0);
+    int max_dp[3] = { 0 }, min_dp[3] = { 0 };
+    int cur[3];
 
-    for (int j = 0; j < 3; j++) {
-        cin >> prev_max[j];
-        prev_min[j] = prev_max[j];  // 초기값 동일하게 설정
-    }
+    for (int i = 0; i < N; i++) {
+        cin >> cur[0] >> cur[1] >> cur[2];
 
-    for (int i = 1; i < N; i++) {
-        for (int j = 0; j < 3; j++) {
-            int num;
-            cin >> num;
-            if (j == 0) {
-                curr_max[j] = num + max(prev_max[j], prev_max[j + 1]);
-                curr_min[j] = num + min(prev_min[j], prev_min[j + 1]);
-            }
-            else if (j == 1) {
-                curr_max[j] = num + max({ prev_max[j - 1], prev_max[j], prev_max[j + 1] });
-                curr_min[j] = num + min({ prev_min[j - 1], prev_min[j], prev_min[j + 1] });
-            }
-            else {
-                curr_max[j] = num + max(prev_max[j - 1], prev_max[j]);
-                curr_min[j] = num + min(prev_min[j - 1], prev_min[j]);
-            }
+        if (i == 0) {
+            max_dp[0] = min_dp[0] = cur[0];
+            max_dp[1] = min_dp[1] = cur[1];
+            max_dp[2] = min_dp[2] = cur[2];
         }
-        prev_max = curr_max;
-        prev_min = curr_min;
+        else {
+            int max0 = max(max_dp[0], max_dp[1]) + cur[0];
+            int max1 = max({ max_dp[0], max_dp[1], max_dp[2] }) + cur[1];
+            int max2 = max(max_dp[1], max_dp[2]) + cur[2];
+
+            int min0 = min(min_dp[0], min_dp[1]) + cur[0];
+            int min1 = min({ min_dp[0], min_dp[1], min_dp[2] }) + cur[1];
+            int min2 = min(min_dp[1], min_dp[2]) + cur[2];
+
+            max_dp[0] = max0;
+            max_dp[1] = max1;
+            max_dp[2] = max2;
+
+            min_dp[0] = min0;
+            min_dp[1] = min1;
+            min_dp[2] = min2;
+        }
     }
 
-    cout << *max_element(prev_max.begin(), prev_max.end()) << " "
-        << *min_element(prev_min.begin(), prev_min.end()) << "\n";
+    cout << *max_element(max_dp, max_dp + 3) << " " << *min_element(min_dp, min_dp + 3) << "\n";
 
     return 0;
 }
