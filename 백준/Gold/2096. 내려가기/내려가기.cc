@@ -1,46 +1,63 @@
 #include <iostream>
+#include <vector>
 #include <algorithm>
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::vector;
+using std::min;
+using std::max;
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
+int dp[3];
+char input[100'001][3];
 
-    int N;
-    cin >> N;
+int main(void){
+    std::ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-    int max_dp[3] = { 0 }, min_dp[3] = { 0 };
-    int cur[3];
+    int N; cin >> N;
 
-    for (int i = 0; i < N; i++) {
-        cin >> cur[0] >> cur[1] >> cur[2];
-
-        if (i == 0) {
-            max_dp[0] = min_dp[0] = cur[0];
-            max_dp[1] = min_dp[1] = cur[1];
-            max_dp[2] = min_dp[2] = cur[2];
-        }
-        else {
-            int max0 = max(max_dp[0], max_dp[1]) + cur[0];
-            int max1 = max({ max_dp[0], max_dp[1], max_dp[2] }) + cur[1];
-            int max2 = max(max_dp[1], max_dp[2]) + cur[2];
-
-            int min0 = min(min_dp[0], min_dp[1]) + cur[0];
-            int min1 = min({ min_dp[0], min_dp[1], min_dp[2] }) + cur[1];
-            int min2 = min(min_dp[1], min_dp[2]) + cur[2];
-
-            max_dp[0] = max0;
-            max_dp[1] = max1;
-            max_dp[2] = max2;
-
-            min_dp[0] = min0;
-            min_dp[1] = min1;
-            min_dp[2] = min2;
-        }
+    for(int i=0;i<N;i++){
+        cin >> input[i][0] >> input[i][1] >> input[i][2];
+        input[i][0] -= '0';
+        input[i][1] -= '0';
+        input[i][2] -= '0';
     }
 
-    cout << *max_element(max_dp, max_dp + 3) << " " << *min_element(min_dp, min_dp + 3) << "\n";
+    dp[0] = input[N-1][0];
+    dp[1] = input[N-1][1];
+    dp[2] = input[N-1][2];
+
+    int temp1, temp2, temp3;
+
+    for(int i=N-2;i>=0;i--){
+        temp1 = input[i][0] + max({dp[0], dp[1]});
+        temp2 = input[i][1] + max({dp[0], dp[1], dp[2]});
+        temp3 = input[i][2] + max({dp[1], dp[2]});
+
+        dp[0] = temp1;
+        dp[1] = temp2;
+        dp[2] = temp3;
+    }
+
+    int _max = max({dp[0], dp[1], dp[2]});
+
+    dp[0] = input[N-1][0];
+    dp[1] = input[N-1][1];
+    dp[2] = input[N-1][2];
+
+    for(int i=N-2;i>=0;i--){
+        temp1 = input[i][0] + min({dp[0], dp[1]});
+        temp2 = input[i][1] + min({dp[0], dp[1], dp[2]});
+        temp3 = input[i][2] + min({dp[1], dp[2]});
+
+        dp[0] = temp1;
+        dp[1] = temp2;
+        dp[2] = temp3;
+    }
+
+    int _min = min({dp[0], dp[1], dp[2]});
+
+    cout << _max << " " << _min << "\n";
 
     return 0;
 }
