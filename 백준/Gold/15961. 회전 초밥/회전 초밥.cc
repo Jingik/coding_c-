@@ -1,43 +1,49 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	int N, d, k, c;
+	cin >> N >> d >> k >> c;
 
-    int N, d, k, c;
-    cin >> N >> d >> k >> c;
+	vector <int> susi_list(N);
 
-    vector<int> susi_list(N);
-    vector<int> count(d + 1, 0); 
-    int current_unique = 0;
+	// susi 체크용
+	int dp[3001] = { 0, };
 
-    for (int i = 0; i < N; i++) {
-        cin >> susi_list[i];
-    }
-    for (int i = 0; i < k; i++) {
-        if (count[susi_list[i]] == 0) current_unique++;
-        count[susi_list[i]]++;
-    }
+	for (int i = 0; i < N; i++) {
+		cin >> susi_list[i];
+	}
 
-    int result = current_unique + (count[c] == 0);
+	// 초기 값 설정
+	int current = 0;
+	for (int i = 0; i < k; i++) {
+		if (dp[susi_list[i]] == 0) {
+			current++;
+		}
+		dp[susi_list[i]]++;
+	}
 
-    for (int i = 0; i < N; i++) {
-        int remove_idx = i; 
-        int add_idx = (i + k) % N; 
+	//슬라이딩 윈도우 형식
+	int result = current + (dp[c] == 0);
 
-        count[susi_list[remove_idx]]--;
-        if (count[susi_list[remove_idx]] == 0) current_unique--;
+	for (int i = 0; i < N; i++) {
+		int remove_idx = i;
+		int add_idx = (i + k) % N;
 
-        if (count[susi_list[add_idx]] == 0) current_unique++; 
-        count[susi_list[add_idx]]++;
+		dp[susi_list[remove_idx]]--;
+		if (dp[susi_list[remove_idx]] == 0) current--;
 
-        result = max(result, current_unique + (count[c] == 0));
-    }
+		if (dp[susi_list[add_idx]] == 0) current++;
+		dp[susi_list[add_idx]]++;
 
-    cout << result << '\n';
-    return 0;
+		result = max(result, current + (dp[c] == 0));
+	}
+
+	cout << result << '\n';
+
+	return 0;
 }
