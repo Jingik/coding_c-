@@ -1,22 +1,28 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-
 using namespace std;
-
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
-    long long n;
-    cin >> n;
-    vector <long long> dp(n + 1, 1);
-    dp[2] = 2;
-    for (long long i = 3; i < n + 1; i++) {
-        dp[i] = (dp[i - 2] + dp[i - 1]) % 15746;
-    }
-    
-    cout << dp[n] << '\n';
 
+    int N;
+    cin >> N;
+
+    int prev2 = 1;  
+    int prev1 = 2; 
+    int curr;
+
+    if (N == 1) {
+        cout << 1 << '\n';
+        return 0;
+    }
+
+    for (int i = 3; i <= N; i++) {
+        curr = (prev1 + prev2) % 15746;
+        prev2 = prev1;
+        prev1 = curr;
+    }
+
+    cout << prev1 << '\n';
     return 0;
 }
