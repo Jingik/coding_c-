@@ -1,32 +1,33 @@
 #include <iostream>
 #include <vector>
 #include <algorithm> 
-
+#include <cstring>
 using namespace std;
+
+int N;
+int dp[1500002];
+int P[1500001], T[1500001];
 
 int main() {
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    int N;
     cin >> N;
-
-    vector<int> T(N + 1), P(N + 1), dp(N + 2, 0);
-
-    for (int i = 1; i <= N; i++) {
+    memset(dp, 0, sizeof(dp));
+    memset(P, 0, sizeof(P));
+    memset(T, 0, sizeof(T));
+    for (int i = 1; i < N + 1; i++) {
         cin >> T[i] >> P[i];
     }
-
-    for (int i = 1; i <= N; i++) {
-        // 현재까지의 최대 이익 유지
+    
+    for (int i = 1; i < N + 1; i++) {
         dp[i] = max(dp[i], dp[i - 1]);
-
-        // 상담을 선택하는 경우
         if (i + T[i] <= N + 1) {
             dp[i + T[i]] = max(dp[i + T[i]], dp[i] + P[i]);
         }
     }
 
-    cout << *max_element(dp.begin(), dp.end()) << '\n';
+    cout << *max_element(dp, dp + 1500002) << '\n';
+
     return 0;
 }
