@@ -1,44 +1,31 @@
 #include <iostream>
-#define MAX 301
+#include <vector>
+
 using namespace std;
 
-int N;
-int Arr[MAX]; 
-int DP[MAX]; 
-
-int Max(int A, int B) {
-    return (A > B) ? A : B;
-}
-
-void Input() {
-    cin >> N;
-    for (int i = 1; i <= N; i++) {
-        cin >> Arr[i];
-    }
-}
-
-void Solution() {
-    DP[1] = Arr[1];
-    if (N >= 2) DP[2] = Arr[1] + Arr[2];
-    if (N >= 3) DP[3] = Max(Arr[1] + Arr[3], Arr[2] + Arr[3]);
-    
-    for (int i = 4; i <= N; i++) {
-        DP[i] = Max(DP[i - 2] + Arr[i], DP[i - 3] + Arr[i - 1] + Arr[i]);
-    }
-    
-    cout << DP[N] << "\n";
-}
-
-void Solve() {
-    Input();
-    Solution();
-}
-
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL);
-    
-    Solve();
-    return 0;
+	ios::sync_with_stdio(false);
+	cin.tie(0); cout.tie(0);
+	
+	int N;
+	cin >> N;
+	vector <int> dp(N + 1, 0);
+	vector <int> arr(N + 1);
+
+	for (int i = 1; i < N + 1; i++) {
+		cin >> arr[i];
+	}
+	
+	dp[1] = arr[1];
+
+	if (N >= 2) dp[2] = arr[1] + arr[2];
+	if (N >= 3) dp[3] = max(arr[1] + arr[3], arr[2] + arr[3]);
+
+	for (int i = 4; i <= N; i++) {
+		dp[i] = max(dp[i - 2] + arr[i], dp[i - 3] + arr[i - 1] + arr[i]);
+	}
+
+	cout << dp[N] << '\n';
+
+	return 0;
 }
