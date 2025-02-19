@@ -1,95 +1,81 @@
 #include <iostream>
-#include <queue>
-#include <cstring> // memset 사용
+#include <vector>
+#include <cstring>
 
 using namespace std;
 
-const int MAX = 50; 
-int N, L, R;
-int Map[MAX][MAX];
-int visited[MAX][MAX]; 
-int dx[] = { 0, 0, 1, -1 };
-int dy[] = { 1, -1, 0, 0 };
+struct Point {
+    int x, y;
+};
 
-int find_unions() {
-    memset(visited, 0, sizeof(visited));
-    int move_count = 0;
+int N, L, R, A[52][52], top, val, cnt, st_s;
+int dx[4] = { -1, 0, 1, 0 }, dy[4] = { 0, 1, 0, -1 };
+bool visit[52][52];
+Point S[2500], st[2500];
 
-    pair<int, int> union_list[MAX * MAX];
-    int union_size = 0;
+void dfs(int x, int y) {
+    if (visit[x][y]) return;
+    visit[x][y] = true;
+    S[top++] = { x, y };
+    val += A[x][y];
 
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            if (visited[i][j] == 0) { 
-                queue<pair<int, int>> q;
-                q.push({ i, j });
-                visited[i][j] = 1;
+    for (int d = 0; d < 4; ++d) {
+        int nx = x + dx[d], ny = y + dy[d];
+        int gap = abs(A[nx][ny] - A[x][y]);
 
-                int total_population = Map[i][j];
-                int total_count = 1;
-
-                union_list[0] = { i, j };
-                union_size = 1;
-
-                while (!q.empty()) {
-                    auto cur = q.front();
-                    q.pop();
-
-                    for (int d = 0; d < 4; d++) {
-                        int nx = cur.first + dx[d];
-                        int ny = cur.second + dy[d];
-
-                        if (nx >= 0 && nx < N && ny >= 0 && ny < N && visited[nx][ny] == 0) {
-                            int diff = abs(Map[cur.first][cur.second] - Map[nx][ny]);
-
-                            if (L <= diff && diff <= R) {
-                                visited[nx][ny] = 1;
-                                q.push({ nx, ny });
-
-                                total_population += Map[nx][ny];
-                                union_list[union_size++] = { nx, ny };
-                                total_count++;
-                            }
-                        }
-                    }
-                }
-
-                if (union_size > 1) {
-                    int new_population = total_population / total_count;
-
-                    for (int k = 0; k < union_size; k++) {
-                        Map[union_list[k].first][union_list[k].second] = new_population;
-                    }
-
-                    move_count++;
-                }
-            }
-        }
+        if (A[nx][ny] != -1 && !visit[nx][ny] && L <= gap && gap <= R)
+            dfs(nx, ny);
     }
 
-    return move_count; 
+    if (top > 1 && x == S[0].x && y == S[0].y) {
+        val /= top;
+        for (int i = 0; i < top; ++i) {
+            A[S[i].x][S[i].y] = val;
+            st[st_s++] = { S[i].x, S[i].y };
+        }
+        cnt = 1;
+    }
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
     cin >> N >> L >> R;
 
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            cin >> Map[i][j];
+    for (int i = 1; i <= N; ++i)
+        for (int j = 1; j <= N; ++j)
+            cin >> A[i][j];
+
+    for (int i = 0; i <= N; ++i) {
+        A[0][i] = A[i][0] = A[N + 1][i] = A[i][N + 1] = -1;
+    }
+
+    for (int i = 1; i <= N; ++i) {
+        for (int j = (i & 1) + 1; j <= N; j += 2) {
+            dfs(i, j);
+            top = 0, val = 0;
         }
     }
 
-    int result = 0;
+    int ans = 0;
+    Point tmp_st[2500];
 
-    while (true) {
-        int moved = find_unions();
-        if (moved == 0) break;
-        result++;
+    while (cnt) {
+        memset(visit, 0, sizeof(visit));
+        cnt = 0;
+        memcpy(tmp_st, st, sizeof(Point) * st_s);
+        int tmp = st_s;
+        st_s = 0;
+
+        for (int i = 0; i < tmp; ++i) {
+            dfs(tmp_st[i].x, tmp_st[i].y);
+            top = 0, val = 0;
+        }
+
+        ++ans;
     }
 
-    cout << result << '\n';
+    cout << ans << '\n';
     return 0;
 }
