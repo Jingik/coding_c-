@@ -1,38 +1,26 @@
 #include <iostream>
 #include <vector>
-#include <queue>
 #include <algorithm>
 
 using namespace std;
 
 struct Edge {
-    int to;
-    int weight;
+    int from, to, weight;
 };
 
 int N, M, start, finish;
-vector<vector<Edge>> graph;
+vector<Edge> edges;
+vector<int> parent;
 
-bool canCross(int weight) {
-    vector<bool> visited(N + 1, false);
-    queue<int> q;
-    q.push(start);
-    visited[start] = true;
+int find(int x) {
+    if (parent[x] == x) return x;
+    return parent[x] = find(parent[x]);
+}
 
-    while (!q.empty()) {
-        int cur = q.front();
-        q.pop();
-
-        for (const auto& edge : graph[cur]) {
-            if (!visited[edge.to] && edge.weight >= weight) {
-                visited[edge.to] = true;
-                q.push(edge.to);
-                if (edge.to == finish) return true;
-            }
-        }
-    }
-
-    return false;
+void unionNodes(int a, int b) {
+    a = find(a);
+    b = find(b);
+    if (a != b) parent[b] = a;
 }
 
 int main() {
@@ -40,35 +28,30 @@ int main() {
     cin.tie(0);
 
     cin >> N >> M;
-    graph.resize(N + 1);
-
-    int minWeight = 1, maxWeight = 0;
+    edges.resize(M);
+    parent.resize(N + 1);
 
     for (int i = 0; i < M; i++) {
         int A, B, C;
         cin >> A >> B >> C;
-        graph[A].push_back({ B, C });
-        graph[B].push_back({ A, C });
-        maxWeight = max(maxWeight, C);
+        edges[i] = { A, B, C };
     }
-
     cin >> start >> finish;
 
-    int result = 0;
-    int low = minWeight, high = maxWeight;
+    sort(edges.begin(), edges.end(), [](const Edge& a, const Edge& b) {
+        return a.weight > b.weight;
+    });
 
-    while (low <= high) {
-        int mid = (low + high) / 2;
+    for (int i = 1; i <= N; i++) parent[i] = i;
 
-        if (canCross(mid)) {
-            result = mid;
-            low = mid + 1; 
-        }
-        else {
-            high = mid - 1;
+    for (const auto& edge : edges) {
+        unionNodes(edge.from, edge.to);
+
+        if (find(start) == find(finish)) {
+            cout << edge.weight << '\n';
+            return 0;
         }
     }
 
-    cout << result << '\n';
     return 0;
 }
