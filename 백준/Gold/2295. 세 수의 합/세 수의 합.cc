@@ -1,35 +1,34 @@
 #include <iostream>
-#include <vector>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
-int main() {
-    int N;
-    cin >> N;
+int n;
+int list[1000];
 
-    vector<int> list(N);
-    for (int i = 0; i < N; i++) {
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    cin >> n;
+    for (int i = 0; i < n; i++) {
         cin >> list[i];
     }
 
-    sort(list.begin(), list.end());
+    sort(list, list + n);
 
-    vector<int> sumList;
-    for (int i = 0; i < N; i++) {
-        for (int j = i; j < N; j++) {
-            sumList.push_back(list[i] + list[j]);
-        }
-    }
+    for (int goal = n - 1; goal >= 0; goal--) {
+        for (int right = goal - 1; right >= 0; right--) {
+            for (int left = 0; left <= right; left++) {
 
-    sort(sumList.begin(), sumList.end());
-
-    for (int k = N - 1; k >= 0; k--) {
-        for (int z = 0; z < N; z++) {
-            int target = list[k] - list[z];
-            if (binary_search(sumList.begin(), sumList.end(), target)) {
-                cout << list[k] << endl;
-                return 0;
+                int target = list[goal] - list[right] - list[left];
+                if (target < 0) break;
+                if (binary_search(list + left, list + right + 1, target)) {
+                    cout << list[goal] << '\n';
+                    return 0;
+                }
             }
         }
     }
