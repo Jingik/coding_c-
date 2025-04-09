@@ -8,7 +8,6 @@ bool robots[201];
 
 void rotate() {
     int last_durability = durability[2 * N - 1];
-
     for (int i = 2 * N - 1; i > 0; --i) {
         durability[i] = durability[i - 1];
         robots[i] = robots[i - 1];
@@ -19,7 +18,7 @@ void rotate() {
 }
 
 void move_robot() {
-    for (int i = N - 2; i >= 0; --i) {
+    for (int i = N - 1; i > 0; --i) {
         if (robots[i] && !robots[i + 1] && durability[i + 1] > 0) {
             robots[i] = false;
             robots[i + 1] = true;
