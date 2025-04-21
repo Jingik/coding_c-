@@ -1,29 +1,16 @@
 #include <string>
 #include <vector>
-#include <iostream>
-#include <unordered_map>
-
+#include <algorithm>
 using namespace std;
 
 string solution(vector<string> participant, vector<string> completion) {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr); cout.tie(nullptr);
-    unordered_map<string, int> check;
+    sort(participant.begin(), participant.end());
+    sort(completion.begin(), completion.end());
 
-    for (auto& name : participant) {
-        check[name] += 1;
-    }
-    for (auto& name : completion) {
-        check[name] -= 1;
+    for (int i = 0; i < completion.size(); ++i) {
+        if (participant[i] != completion[i])
+            return participant[i];
     }
 
-    string answer = "";
-
-    for (auto x : check) {
-        if (x.second != 0) {
-            answer = x.first;
-        }
-    }
-
-    return answer;
+    return participant.back();
 }
