@@ -3,26 +3,26 @@
 #include <unordered_map>
 #include <map>
 #include <algorithm>
-
+#include <iostream>
 using namespace std;
 
 vector<string> answer;
 map<string, vector<pair<string, bool>>> graph;
 int ticketCount;
 
-bool dfs(string curr, vector<string>& route, int used) {
-    route.push_back(curr);
+bool dfs(string cur, vector<string>& route, int count){
+    route.push_back(cur);
 
-    if (used == ticketCount) {
+    if(count == ticketCount){
         answer = route;
         return true;
     }
 
-    for (auto& [next, usedFlag] : graph[curr]) {
-        if (!usedFlag) {
-            usedFlag = true;
-            if (dfs(next, route, used + 1)) return true;
-            usedFlag = false;
+    for(auto& [value, visit] : graph[cur]){
+        if(!visit){
+            visit = true;
+            if(dfs(value, route, count + 1)) return true;
+            visit = false;
         }
     }
 
@@ -30,17 +30,17 @@ bool dfs(string curr, vector<string>& route, int used) {
     return false;
 }
 
-vector<string> solution(vector<vector<string>> tickets) {
-    for (auto& ticket : tickets) {
-        graph[ticket[0]].emplace_back(ticket[1], false);
-    }
 
-    for (auto& [key, vec] : graph) {
+vector<string> solution(vector<vector<string>> tickets) {
+    for(auto& val : tickets){
+        graph[val[0]].emplace_back(val[1], false);
+    }
+    
+    for(auto& [key,vec] : graph){
         sort(vec.begin(), vec.end());
     }
-
-    vector<string> route;
+    
     ticketCount = tickets.size();
-    dfs("ICN", route, 0);
+    dfs("ICN", answer, 0);
     return answer;
 }
