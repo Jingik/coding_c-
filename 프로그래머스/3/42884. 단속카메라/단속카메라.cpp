@@ -16,7 +16,8 @@ int solution(vector<vector<int>> routes) {
         int in = r[0];
         int out = r[1];
 
-        if (cam < in) {
+        if (in <= cam && cam <= out) continue;
+        else {
             cam = out;
             answer++;
         }
