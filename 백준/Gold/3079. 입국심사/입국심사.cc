@@ -9,12 +9,12 @@ ll N, M;
 vector<ll> times;
 
 bool isPossible(ll mid) {
-    ll check = 0;
+    ll cur = 0;
     for (auto time : times) {
-        check += mid / time;
-        if (check >= M) return true;
+        cur += mid / time;
+        if (cur >= M) return true;
     }
-    return check >= M;
+    return cur >= M;
 }
 
 int main() {
