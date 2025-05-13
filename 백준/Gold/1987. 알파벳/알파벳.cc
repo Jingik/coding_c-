@@ -1,50 +1,44 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <algorithm>
-
+#include <bits/stdc++.h>
 using namespace std;
 
+char board[20][20], d[2][4] = {{-1, 1, 0, 0},{0, 0, -1, 1}};
+int visited[20][20];
 int R, C;
-vector<string> board;
-bool alpha[26];  // 알파벳 방문 여부
-int dx[] = {1, -1, 0, 0};
-int dy[] = {0, 0, 1, -1};
 
-int answer = 0;
-
-void DFS(int x, int y, int depth) {
-    answer = max(answer, depth);
-
-    for (int i = 0; i < 4; ++i) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
-
-        if (nx < 0 || ny < 0 || nx >= R || ny >= C) continue;
-
-        char nextChar = board[nx][ny];
-        if (!alpha[nextChar - 'A']) {
-            alpha[nextChar - 'A'] = true;
-            DFS(nx, ny, depth + 1);
-            alpha[nextChar - 'A'] = false;
-        }
-    }
+int dfs(int r, int c, int used) {
+	used |= (1 << board[r][c]);
+	if(visited[r][c] == used) return 0;
+	visited[r][c] = used;
+	
+	int ret = 0, tmp = 0, nr, nc, i;
+	for(i = 0; i < 4; i++) {
+		nr = r + d[0][i];
+		nc = c + d[1][i];
+		if(nr < 0 || nr >= R || nc < 0 || nc >= C) continue;
+		if(!(used & (1 << board[nr][nc]))) {
+			tmp = dfs(nr, nc, used);
+			ret = ret > tmp ? ret : tmp;
+			if(ret == 25) break;
+		}
+	}
+	return ret + 1;
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr); cout.tie(nullptr);
-
-    cin >> R >> C;
-    board.resize(R);
-
-    for (int i = 0; i < R; ++i) {
-        cin >> board[i];
-    }
-
-    alpha[board[0][0] - 'A'] = true; 
-    DFS(0, 0, 1);
-
-    cout << answer << '\n';
-    return 0;
+	ios_base::sync_with_stdio(false);
+	cin.tie(nullptr); cout.tie(nullptr);
+	
+	char tmp;
+	int i, j;
+	
+	cin >> R >> C;
+	for(i = 0; i < R; i++) {
+		for(j = 0; j < C; j++) {
+			cin >> tmp;
+			board[i][j] = tmp - 'A';
+		}
+	}
+	cout << dfs(0, 0, 0);
+	
+	return 0;
 }
