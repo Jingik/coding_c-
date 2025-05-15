@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -19,10 +20,11 @@ int main() {
 
     cin >> M;
     vector<long long> compare_num(M);
-    vector<long long> result;
     for (long long i = 0; i < M; i++) {
         cin >> compare_num[i];
     }
+
+    string result;
 
     for (long long i = 0; i < M; i++) {
         int check = 0;
@@ -40,12 +42,10 @@ int main() {
                 right = mid - 1;
             }
         }
-        result.push_back(check);
+
+        result += to_string(check) + " ";
     }
 
-    for (auto val : result) {
-        cout << val << " ";
-    }
-    cout << '\n';
+    cout << result << '\n';
     return 0;
 }
