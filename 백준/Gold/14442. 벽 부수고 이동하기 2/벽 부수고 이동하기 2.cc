@@ -1,50 +1,51 @@
 #include <iostream>
-#include <vector>
+#include <algorithm>
 #include <queue>
+#include <vector>
+#include <string>
+
 using namespace std;
 
-struct State {
-    int x, y, dist, broken;
-};
+#define X first
+#define Y second
 
 int n, m, k;
-int dx[] = { 1, -1, 0, 0 };
-int dy[] = { 0, 0, 1, -1 };
-int Map[1001][1001];
-int visited[1001][1001][10];
+string board[1001];
+int dist[1001][1001]; 
+int broke[1001][1001]; 
+int dx[4] = { 1, 0, -1, 0 };
+int dy[4] = { 0, 1, 0, -1 };
 
-bool isValid(int x, int y) {
-    return 0 <= x && x < m && 0 <= y && y < n;
-}
-
+// BFS 함수
 int BFS() {
-    //vector<vector<vector<bool>>> visited(n, vector<vector<bool>>(m, vector<bool>(k + 1, false)));
-    queue<State> q;
+    queue<pair<int, int>> Q;
+    Q.push({ 0, 0 });
+    dist[0][0] = 1;
 
-    q.push({ 0, 0, 1, 0 });
-    visited[0][0][0] = true;
+    while (!Q.empty()) {
+        pair<int, int> cur = Q.front(); Q.pop();
 
-    while (!q.empty()) {
-        State cur = q.front(); q.pop();
+        if (cur.X == n - 1 && cur.Y == m - 1)
+            return dist[cur.X][cur.Y];
 
-        if (cur.x == m - 1 && cur.y == n - 1) {
-            return cur.dist;
-        }
+        for (int dir = 0; dir < 4; dir++) {
+            int nx = cur.X + dx[dir];
+            int ny = cur.Y + dy[dir];
 
-        for (int i = 0; i < 4; i++) {
-            int nx = cur.x + dx[i];
-            int ny = cur.y + dy[i];
+            if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
 
-            if (!isValid(nx, ny)) continue;
-
-            if (Map[ny][nx] == 0 && !visited[ny][nx][cur.broken]) {
-                visited[ny][nx][cur.broken] = true;
-                q.push({ nx, ny, cur.dist + 1, cur.broken });
+            if (board[nx][ny] == '0') {
+                if (dist[nx][ny] > 0 && broke[nx][ny] <= broke[cur.X][cur.Y]) continue;
+                dist[nx][ny] = dist[cur.X][cur.Y] + 1;
+                broke[nx][ny] = broke[cur.X][cur.Y];
+                Q.push({ nx, ny });
             }
-
-            else if (Map[ny][nx] == 1 && cur.broken < k && !visited[ny][nx][cur.broken + 1]) {
-                visited[ny][nx][cur.broken + 1] = true;
-                q.push({ nx, ny, cur.dist + 1, cur.broken + 1 });
+            else {
+                if (broke[cur.X][cur.Y] == k) continue;
+                if (dist[nx][ny] > 0 && broke[nx][ny] <= broke[cur.X][cur.Y] + 1) continue;
+                dist[nx][ny] = dist[cur.X][cur.Y] + 1;
+                broke[nx][ny] = broke[cur.X][cur.Y] + 1;
+                Q.push({ nx, ny });
             }
         }
     }
@@ -52,20 +53,17 @@ int BFS() {
     return -1;
 }
 
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr); cout.tie(nullptr);
+int main(void) {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
     cin >> n >> m >> k;
-    //vector<vector<int>> Map(n, vector<int>(m));
     for (int i = 0; i < n; i++) {
-        string row;
-        cin >> row;
-        for (int j = 0; j < m; j++) {
-            Map[i][j] = row[j] - '0';
-        }
+        cin >> board[i];
     }
 
-    cout << BFS() << '\n';
+    int answer = BFS();
+    cout << answer << '\n';
+
     return 0;
 }
