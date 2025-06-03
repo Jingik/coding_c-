@@ -10,13 +10,15 @@ struct State {
 int n, m, k;
 int dx[] = { 1, -1, 0, 0 };
 int dy[] = { 0, 0, 1, -1 };
+int Map[1001][1001];
+int visited[1001][1001][10];
 
 bool isValid(int x, int y) {
     return 0 <= x && x < m && 0 <= y && y < n;
 }
 
-int BFS(const vector<vector<int>>& Map) {
-    vector<vector<vector<bool>>> visited(n, vector<vector<bool>>(m, vector<bool>(k + 1, false)));
+int BFS() {
+    //vector<vector<vector<bool>>> visited(n, vector<vector<bool>>(m, vector<bool>(k + 1, false)));
     queue<State> q;
 
     q.push({ 0, 0, 1, 0 });
@@ -55,8 +57,7 @@ int main() {
     cin.tie(nullptr); cout.tie(nullptr);
 
     cin >> n >> m >> k;
-    vector<vector<int>> Map(n, vector<int>(m));
-
+    //vector<vector<int>> Map(n, vector<int>(m));
     for (int i = 0; i < n; i++) {
         string row;
         cin >> row;
@@ -65,6 +66,6 @@ int main() {
         }
     }
 
-    cout << BFS(Map) << '\n';
+    cout << BFS() << '\n';
     return 0;
 }
