@@ -35,23 +35,14 @@ int Dijkstra() {
 
     while (!pq.empty()) {
         State cur = pq.top(); pq.pop();
-
-        if (cur.weight > dist[cur.y][cur.x]) {
-            continue;
-        }
-
-        if (cur.x == m - 1 && cur.y == n - 1) {
-            return cur.weight;
-        }
+        if (dist[cur.y][cur.x] < cur.weight) continue;
+        if (cur.y == n - 1 && cur.x == m - 1) return cur.weight;
 
         for (int i = 0; i < 4; i++) {
             int nx = cur.x + dx[i];
             int ny = cur.y + dy[i];
 
-            if (nx < 0 || nx >= m || ny < 0 || ny >= n) {
-                continue;
-            }
-
+            if (nx < 0 || nx >= m || ny < 0 || ny >= n) continue;
             int next_weight = cur.weight;
             if (Map[ny][nx] == 1) {
                 next_weight += 1;
