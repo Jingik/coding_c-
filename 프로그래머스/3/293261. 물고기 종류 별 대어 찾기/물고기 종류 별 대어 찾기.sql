@@ -1,26 +1,22 @@
 SELECT
-    I.ID,
-    N.FISH_NAME,
-    I.LENGTH
+    FI.ID,
+    FNI.FISH_NAME,
+    FI.LENGTH
 FROM
-    (
-SELECT
-    A.ID,
-    A.FISH_TYPE,
-    B.LENGTH
-FROM
-    (
-    SELECT 
-        FISH_TYPE,
-        MAX(LENGTH) AS LENGTH
-     FROM
-        FISH_INFO
-     GROUP BY
-        FISH_TYPE
-    ) AS B JOIN
-    FISH_INFO AS A ON A.FISH_TYPE = B.FISH_TYPE AND A.LENGTH = B.LENGTH 
-    ) AS I
-    JOIN
-    FISH_NAME_INFO AS N 
-    ON I.FISH_TYPE = N.FISH_TYPE
-ORDER BY I.ID ASC;
+    FISH_INFO AS FI
+JOIN
+    FISH_NAME_INFO AS FNI
+ON
+    FI.FISH_TYPE = FNI.FISH_TYPE
+WHERE
+    (FI.FISH_TYPE, FI.LENGTH) IN (
+        SELECT
+            FISH_TYPE,
+            MAX(LENGTH)
+        FROM
+            FISH_INFO
+        GROUP BY
+            FISH_TYPE
+    )
+ORDER BY
+    FI.ID ASC;
