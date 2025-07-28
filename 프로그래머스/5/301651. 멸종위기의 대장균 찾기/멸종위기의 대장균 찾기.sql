@@ -1,0 +1,32 @@
+WITH RECURSIVE Generation AS (
+    SELECT
+        ID,
+        1 AS GENERATION
+    FROM
+        ECOLI_DATA
+    WHERE
+        PARENT_ID IS NULL
+
+    UNION ALL
+
+    SELECT
+        E.ID, 
+        G.GENERATION + 1 AS GENERATION
+    FROM
+        Generation AS G
+    INNER JOIN
+        ECOLI_DATA AS E ON E.PARENT_ID = G.ID
+)
+SELECT
+    COUNT(G.ID) AS COUNT,
+    G.GENERATION
+FROM
+    Generation AS G
+LEFT JOIN
+    ECOLI_DATA AS E ON G.ID = E.PARENT_ID
+WHERE
+    E.ID IS NULL
+GROUP BY
+    G.GENERATION
+ORDER BY
+    G.GENERATION ASC;
