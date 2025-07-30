@@ -1,23 +1,31 @@
--- 코드를 작성해주세요
-
-SELECT
-    A.ID
-FROM 
-    ECOLI_DATA AS A 
-    INNER JOIN
-    (
+WITH RECURSIVE Generation AS (
     SELECT
-        A.ID
+        ID,
+        PARENT_ID,
+        1 AS generation_num
     FROM
-        ECOLI_DATA AS A 
-        INNER JOIN 
-        (SELECT
-            ID
-        FROM
-            ECOLI_DATA
-        WHERE ISNULL(PARENT_ID)) AS B
-        ON A.PARENT_ID = B.ID
-    ) AS C
-    ON A.PARENT_ID = C.ID
+        ECOLI_DATA
+    WHERE
+        PARENT_ID IS NULL
 
-    
+    UNION ALL
+
+    SELECT
+        E.ID,
+        E.PARENT_ID,
+        G.generation_num + 1 AS generation_num
+    FROM
+        ECOLI_DATA AS E
+    INNER JOIN
+        Generation AS G ON E.PARENT_ID = G.ID 
+    WHERE
+        G.generation_num < 4
+)
+SELECT
+    ID
+FROM
+    Generation
+WHERE
+    generation_num = 3
+ORDER BY
+    ID ASC;
