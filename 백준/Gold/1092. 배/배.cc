@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 
 using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false);
+    ios_base::sync_with_stdio(false);
     cin.tie(nullptr); cout.tie(nullptr);
 
     int n;
@@ -30,26 +31,22 @@ int main() {
         return 0;
     }
 
-    if (cranes[0] < boxes[0]) {
-        cout << -1 << '\n';
-        return 0;
-    }
-
-    vector<bool> moved(m, false);
     int time = 0;
     int moved_count = 0;
+    vector<int> pos(n, 0);
+    vector<bool> moved(m, false);
 
     while (moved_count < m) {
         time++;
-        int box_idx = 0;
-        for (int i = 0; i < n; ++i) {
-            while (box_idx < m) {
-                if (!moved[box_idx] && cranes[i] >= boxes[box_idx]) {
-                    moved[box_idx] = true;
+        for (int i = 0; i < n; i++) {
+            while (pos[i] < m) {
+                if (!moved[pos[i]] && cranes[i] >= boxes[pos[i]]) {
+                    moved[pos[i]] = true;
                     moved_count++;
+                    pos[i]++;
                     break;
                 }
-                box_idx++;
+                pos[i]++;
             }
         }
     }
