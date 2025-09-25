@@ -4,7 +4,8 @@
 using namespace std;
 
 struct mem {
-    int num, g, w, d;
+    int num;
+    long long g, w, d;
 };
 
 bool compare(mem A, mem B) {
@@ -33,6 +34,10 @@ int main() {
     sort(member.begin(), member.end(), compare);
 
     int rank = 1;
+    if (member[0].num == k) {
+        cout << rank << '\n';
+        return 0;
+    }
     for (int i = 1; i < n; i++) {
         if (member[i].g == member[i - 1].g && member[i].w == member[i - 1].w && member[i].d == member[i - 1].d) {
             if (member[i].num == k) {
