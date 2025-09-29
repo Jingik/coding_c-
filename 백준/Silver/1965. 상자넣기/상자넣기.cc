@@ -25,7 +25,7 @@ int main() {
         }
     }
 
-    cout << *max_element(dp.begin(), dp.end()) << endl;
+    cout << *max_element(dp.begin(), dp.end()) << '\n';
 
 	return 0;
 }
