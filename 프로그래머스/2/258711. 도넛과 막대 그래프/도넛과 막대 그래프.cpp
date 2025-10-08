@@ -1,49 +1,48 @@
 #include <string>
 #include <vector>
-#include <algorithm> 
-
+#include <algorithm>
 using namespace std;
 
 vector<int> solution(vector<vector<int>> edges) {
-    int maxV = 0;
-    for (const auto& e : edges) {
-        maxV = max(maxV, max(e[0], e[1]));
+    vector<int> answer;
+    int max_edge = 0;
+    for(const auto& edge : edges){
+        max_edge = max(max_edge, edge[0]);
+        max_edge = max(max_edge, edge[1]);
     }
     
-    vector<int> inDeg(maxV + 1, 0);
-    vector<int> outDeg(maxV + 1, 0);
+    vector<int>outDeg(max_edge + 1);
+    vector<int>inDeg(max_edge + 1);
     
-    for (const auto& e : edges) {
-        int a = e[0], b = e[1];
-        outDeg[a]++;
-        inDeg[b]++;
+    for(const auto& edge : edges){
+        outDeg[edge[0]]++;
+        inDeg[edge[1]]++;
     }
     
-    int root = -1;
-    int totalGraphs = 0;
-    for (int i = 1; i <= maxV; ++i) {
-        if (inDeg[i] == 0 && outDeg[i] >= 2) {
+    int total_graph = 0;
+    int root = 0;
+    for(int i = 1; i < max_edge + 1; i++){
+        if(outDeg[i] >= 2 && inDeg[i] == 0){
             root = i;
-            totalGraphs = outDeg[i];
+            total_graph = outDeg[i];
             break;
         }
     }
     
-    int barCount = 0;
-    for (int i = 1; i <= maxV; ++i) {
-        if (outDeg[i] == 0 && inDeg[i] != 0) {
-            barCount++;
-        }
-    }
-
-    int eightCount = 0;
-    for (int i = 1; i <= maxV; ++i) {
-        if (inDeg[i] >= 2 && outDeg[i] >= 2) {
-            eightCount++;
+    int boards_graph = 0;
+    for(int i = 1; i < max_edge + 1; i++){
+        if(inDeg[i] > 0 && outDeg[i] == 0){
+            boards_graph++;
         }
     }
     
-    int donutCount = totalGraphs - barCount - eightCount;
+    int eight_graph = 0;
+    for(int i = 1; i < max_edge + 1; i++){
+        if(inDeg[i] > 1 && outDeg[i] > 1){
+            eight_graph++;
+        }
+    }
     
-    return {root, donutCount, barCount, eightCount};
+    int do_graph = total_graph - boards_graph - eight_graph;
+    return {root, do_graph, boards_graph, eight_graph};
 }
