@@ -4,19 +4,20 @@
 
 using namespace std;
 
-void dfs(int idx, int currSum, const vector<vector<int>>& dice, const vector<int>& selected, vector<int>& sums) {
-    if (idx == selected.size()) {
-        sums.push_back(currSum);
+void dfs(int idx, int curSum, const vector<vector<int>>& dice, const vector<int>& selected, vector<int>& sums){
+    if(idx == selected.size()){
+        sums.push_back(curSum);
         return;
     }
-    for (int face : dice[selected[idx]]) {
-        dfs(idx + 1, currSum + face, dice, selected, sums);
+    
+    for(int face : dice[selected[idx]]){
+        dfs(idx + 1, curSum + face, dice, selected, sums);
     }
 }
 
-void calculateSums(const vector<vector<int>>& dice, const vector<int>& selected, vector<int>& sums) {
-    sums.clear(); 
-    dfs(0, 0, dice, selected, sums); 
+void calculate(const vector<vector<int>>& dice, const vector<int>& selected, vector<int>& sums){
+    sums.clear();
+    dfs(0,0, dice, selected, sums);
 }
 
 long long countWins(const vector<int>& aSums, const vector<int>& bSums) {
@@ -35,29 +36,31 @@ vector<int> solution(vector<vector<int>> dice) {
     vector<int> answer;
     long long maxWins = -1;
 
+    
     vector<int> indices(n);
-    for (int i = 0; i < n; ++i) indices[i] = i;
-
+    for (int i = 0; i < n; i++) indices[i] = i;
+    
     vector<bool> comb(n, false);
     fill(comb.begin(), comb.begin() + half, true);
 
-    do {
+    do{
         vector<int> aIndices, bIndices;
-        for (int i = 0; i < n; ++i) {
-            if (comb[i]) aIndices.push_back(i);
+        for(int i = 0; i < n; i++){
+            if(comb[i]) aIndices.push_back(i);
             else bIndices.push_back(i);
         }
-
+        
         vector<int> aSums, bSums;
-        calculateSums(dice, aIndices, aSums);
-        calculateSums(dice, bIndices, bSums);
-
+        calculate(dice, aIndices, aSums);
+        calculate(dice, bIndices, bSums);
+        
         long long wins = countWins(aSums, bSums);
 
         if (wins > maxWins) {
             maxWins = wins;
             answer = aIndices;
         }
+        
     } while (prev_permutation(comb.begin(), comb.end()));
 
     for (int& x : answer) x += 1;
