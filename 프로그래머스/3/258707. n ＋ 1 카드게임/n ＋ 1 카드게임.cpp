@@ -1,53 +1,41 @@
 #include <string>
 #include <vector>
 #include <set>
-
 using namespace std;
 
-bool MatchCards(set<int>& cards1, set<int>& cards2, int target)
-{
-    for (int a : cards1)
-    {
-        auto it = cards2.find(target - a);
-        if (it != cards2.end())
-        {
-            cards1.erase(a);
-            cards2.erase(*it);
+bool MatchCard(set<int>& A, set<int>& B, int target){
+    for(auto& x : A){
+        auto it = B.find(target - x);
+        if(it != B.end()){
+            A.erase(x);
+            B.erase(*it);
             return true;
-        
         }
     }
-    
     return false;
 }
 
-int solution(int coin, vector<int> cards) 
-{
+int solution(int coin, vector<int> cards) {
+    int answer = 1, card_size = cards.size();
     set<int> hands, draws;
-    int answer = 1, size = cards.size();
     
-    for (int i = 0; i < size / 3; i++)
+    for(int i = 0; i < card_size / 3; i++){
         hands.insert(cards[i]);
-    
-    for (int i = size / 3; i < size; i+=2)
-    {
+    }
+
+    for(int i = card_size / 3; i < card_size; i += 2){
         draws.insert(cards[i]);
-        draws.insert(cards[i+1]);
-        
-        if (MatchCards(hands, hands, size+1))
-        {
+        draws.insert(cards[i + 1]);
+        if (MatchCard(hands, hands, card_size + 1)){
+
         }
-        else if (coin >= 1 && MatchCards(hands, draws, size+1))
-        {
+        else if (coin >= 1 && MatchCard(hands, draws, card_size + 1)){
             coin -= 1;
         }
-        else if (coin >= 2 && MatchCards(draws, draws, size+1))
-        {
+        else if (coin >= 2 && MatchCard(draws, draws, card_size + 1)){
             coin -= 2;
         }
-        else
-            break;
-        
+        else break;
         answer++;
     }
     
