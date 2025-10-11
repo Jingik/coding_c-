@@ -6,15 +6,15 @@
 
 using namespace std;
 
-vector<string> split(const string& words){
-    vector<string> result;
-    string buf;
-    istringstream ss(words);
-    
-    while(getline(ss, buf, ' ')){
-        result.push_back(buf);
-    }
-    return result;
+vector<string> split(string str) {
+	istringstream ss(str);
+	string str_buf;
+	vector<string> result;
+
+	while (getline(ss, str_buf, ' ')) {
+		result.push_back(str_buf);
+	}
+	return result;
 }
 
 int solution(vector<string> friends, vector<string> gifts) {
