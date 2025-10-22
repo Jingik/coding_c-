@@ -11,18 +11,16 @@ int main() {
     int m, n, input;
     cin >> m >> n;
 
-    vector<int> snacks;
+    vector<int> snacks(n);
 
-    for(int i=0; i<n; i++){
-        cin >> input;
-        snacks.push_back(input);
+    for(int i = 0; i < n; i++){
+        cin >> snacks[i];
     }
 
     sort(snacks.begin(), snacks.end());
 
     int low = 1;
     int high = snacks[n-1];
-
     int result = 0;
 
     while(low <= high){
