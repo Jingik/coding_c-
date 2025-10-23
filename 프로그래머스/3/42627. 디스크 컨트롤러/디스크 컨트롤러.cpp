@@ -5,14 +5,23 @@
 #include <algorithm>
 using namespace std;
 
-struct Val{
-    int index;
+struct Time {
     int time;
     int start;
+    int index;
+    // operator<(const Time& x){
+    //     if(time != x.time){
+    //         return time > x.time;
+    //     }
+    //     if(start != x.start){
+    //         return start > x.start;
+    //     }
+    //     return index > x.index; 
+    // }
 };
 
 struct Compare {
-    bool operator()(const Val& x, const Val& y) {
+    bool operator()(const Time& x, const Time& y) {
         if (x.time != y.time) {
             return x.time > y.time;
         }
@@ -28,21 +37,20 @@ int solution(vector<vector<int>> jobs) {
     cin.tie(nullptr); cout.tie(nullptr);
 
     sort(jobs.begin(), jobs.end());
+    priority_queue<Time, vector<Time>, Compare> hq;
 
-    priority_queue<Val, vector<Val>, Compare> pq;
     int time = 0;
-    int total = 0;
     int idx = 0;
+    int total = 0;
     int count = jobs.size();
 
-    while (idx < count || !pq.empty()) {
+    while (idx < count || !hq.empty()) {
         while (idx < count && jobs[idx][0] <= time) {
-            pq.push({ idx, jobs[idx][1], jobs[idx][0] });
+            hq.push({ jobs[idx][1], jobs[idx][0], idx });
             idx++;
         }
-
-        if (!pq.empty()) {
-            Val job = pq.top(); pq.pop();
+        if (!hq.empty()) {
+            Time job = hq.top(); hq.pop();
             time += job.time;
             total += (time - job.start);
         }
