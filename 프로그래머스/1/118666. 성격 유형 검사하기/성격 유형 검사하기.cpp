@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-
 using namespace std;
 
 string solution(vector<string> survey, vector<int> choices) {
@@ -12,30 +11,26 @@ string solution(vector<string> survey, vector<int> choices) {
     scores['J'] = 0; scores['M'] = 0;
     scores['A'] = 0; scores['N'] = 0;
     
-    for(int i = 0; i < survey.size(); i++) {
+    for(int i = 0; i < survey.size(); i++){
         char disagree = survey[i][0];
         char agree = survey[i][1];
-        int choice = choices[i];
+        int score = choices[i];
         
-        if(choice < 4) {
-            scores[disagree] += (4 - choice);
-        } else if(choice > 4) {
-            scores[agree] += (choice - 4);
+        if(score < 4){
+            scores[disagree] += (4 - score);
+        }
+        else{
+            scores[agree] += (score - 4) ;
         }
     }
-    
     vector<vector<char>> type = {{'R', 'T'}, {'C', 'F'}, {'J', 'M'}, {'A', 'N'}};
     
-    for(int i = 0; i < 4; i++) {
-        char type1 = type[i][0];
-        char type2 = type[i][1];
-        
-        if(scores[type1] >= scores[type2]) {
-            answer += type1;
-        } else {
-            answer += type2;
-        }
+    for(int i = 0; i < 4; i++){
+        int A = scores[type[i][0]], B = scores[type[i][1]];
+        if(A >= B) answer+= type[i][0];
+        else answer += type[i][1];
     }
+    
     
     return answer;
 }
