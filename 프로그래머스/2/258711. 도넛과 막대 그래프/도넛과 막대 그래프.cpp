@@ -10,7 +10,6 @@ vector<int> solution(vector<vector<int>> edges) {
         max_edge = max(max_edge, edge[0]);
         max_edge = max(max_edge, edge[1]);
     }
-    
     vector<int>outDeg(max_edge + 1);
     vector<int>inDeg(max_edge + 1);
     
