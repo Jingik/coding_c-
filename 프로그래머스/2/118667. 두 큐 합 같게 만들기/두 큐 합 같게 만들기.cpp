@@ -41,5 +41,5 @@ int solution(vector<int> queue1, vector<int> queue2) {
         answer++;
     }
     
-    return (sum1 == sum2) ? answer : -1;
+    return (sum1 == sum2 ? answer : -1);
 }
