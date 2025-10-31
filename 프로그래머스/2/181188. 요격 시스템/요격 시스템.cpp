@@ -3,8 +3,11 @@
 
 using namespace std;
 
-bool Sort(vector<int>& a, vector<int>& b){
-    return a[1] < b[1] || (a[1] == b[1] && a[0] < b[0]);
+bool Sort(vector<int>& A, vector<int>&B){
+    if(A[1] == B[1]){
+        return A[0] < B[0];
+    }
+    return A[1] < B[1];
 }
 
 int solution(vector<vector<int>> targets) {
