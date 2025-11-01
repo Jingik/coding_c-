@@ -1,4 +1,3 @@
--- 코드를 입력하세요
 SELECT
     A.REST_ID,
     A.REST_NAME,
@@ -9,9 +8,7 @@ SELECT
 FROM
     REST_INFO AS A
 JOIN 
-    REST_REVIEW AS B 
-ON 
-    A.REST_ID = B.REST_ID
+    REST_REVIEW AS B ON A.REST_ID = B.REST_ID
 WHERE
     A.ADDRESS LIKE "서울%"
 GROUP BY 
