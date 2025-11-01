@@ -26,4 +26,3 @@ WHERE
     )
 ORDER BY
     B.ID ASC;
-
