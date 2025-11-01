@@ -1,0 +1,28 @@
+# -- 코드를 입력하세요
+SELECT 
+    YEAR(sal.SALES_DATE) AS YEAR, 
+    MONTH(sal.SALES_DATE) AS MONTH,
+    inf.GENDER,
+    COUNT(DISTINCT inf.USER_ID) AS USERS 
+FROM
+    USER_INFO inf
+JOIN
+    ONLINE_SALE sal ON inf.USER_ID = sal.USER_ID
+WHERE 
+    inf.GENDER IS NOT NULL
+GROUP BY 
+    YEAR, 
+    MONTH, 
+    GENDER 
+ORDER BY 
+    YEAR, 
+    MONTH, 
+    GENDER
+
+# WITH CUSTOM AS(
+#     SELECT
+#         *
+#     FROM
+#         USER_INFO
+# )
+# SELECT * FROM CUSTOM
